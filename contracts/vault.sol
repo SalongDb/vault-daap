@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-contract Vault {
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
-     // Tracks user deposit amount and last deposit time
+contract Vault is Ownable, ReentrancyGuard, Pausable {
+
+    // Tracks user deposit amount and last deposit time
     struct UserDepoInfo {
         uint depoAmount;
         uint depoTime;
@@ -11,22 +15,14 @@ contract Vault {
 
     mapping(address => UserDepoInfo) public depoInfo;
 
-    address public owner;
     uint public feeBalance; // Accumulated 2% withdrawal fees
-    bool public pause = false;
 
     event Deposit(address indexed sender, uint256 amount);
     event Withdraw(address indexed receiver, uint256 amount);
     event Fees(address indexed receiver, uint256 amount);
 
-    constructor() {
-        owner = msg.sender;
-    }
-
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Identity denied");
-        _;
-    }
+    // Sets the deployer as the initial owner
+    constructor() Ownable(msg.sender) {}
 
     // Deposit resets the 7-day lock timer
     function deposit() public payable {
@@ -41,8 +37,9 @@ contract Vault {
     }
 
     // Withdraw after 7 days with 2% fee
-    function withdraw(uint256 amount) public {
-        require(!pause, "Withdrawals are paused");
+    function withdraw(uint256 amount) public nonReentrant whenNotPaused {
+
+        require(amount > 0, "Invalid amount");
 
         UserDepoInfo storage user = depoInfo[msg.sender];
 
@@ -70,19 +67,17 @@ contract Vault {
 
         feeBalance -= amount;
 
-        (bool success, ) = payable(owner).call{value: amount}("");
+        (bool success, ) = payable(owner()).call{value: amount}("");
         require(success, "Transfer failed");
 
-        emit Fees(owner, amount);
+        emit Fees(owner(), amount);
     }
 
-    function pauseWithdraw() public onlyOwner {
-        require(!pause,"Already paused");
-        pause = true;
+    function pause() public onlyOwner {
+        _pause();
     }
 
-    function unpauseWithdraw() public onlyOwner {
-        require(pause,"Not paused");
-        pause = false;
+    function unpause() public onlyOwner {
+        _unpause();
     }
 }
