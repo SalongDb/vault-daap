@@ -2,34 +2,32 @@ import hardhatToolboxViemPlugin from "@nomicfoundation/hardhat-toolbox-viem";
 import { configVariable, defineConfig } from "hardhat/config";
 import hardhatViem from "@nomicfoundation/hardhat-viem";
 import hardhatViemAssertions from "@nomicfoundation/hardhat-viem-assertions";
-import hardhatNodeTestRunner from "@nomicfoundation/hardhat-node-test-runner";
-import hardhatNetworkHelpers from "@nomicfoundation/hardhat-network-helpers";
 
 export default defineConfig({
   plugins: [
     hardhatToolboxViemPlugin,
     hardhatViem,
     hardhatViemAssertions,
-    hardhatNodeTestRunner,
-    hardhatNetworkHelpers,
   ],
   solidity: {
     profiles: {
-      default: {
-        version: "0.8.28",
-      },
+      default: { version: "0.8.28" },
       production: {
         version: "0.8.28",
         settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
-          },
+          optimizer: { enabled: true, runs: 200 },
         },
       },
     },
   },
   networks: {
+    // Local Hardhat node
+    local: {
+      type: "http",            // Must use "http" for custom networks
+      url: "http://127.0.0.1:8545",
+      chainType: "l1",
+      chainId: 31337,          // Hardhat default chain ID
+    },
     hardhatMainnet: {
       type: "edr-simulated",
       chainType: "l1",
