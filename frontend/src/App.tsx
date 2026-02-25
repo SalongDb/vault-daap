@@ -1,7 +1,12 @@
-import { VaultUI } from "./components/VaultUI";
+import './App.css'
 
 function App() {
-  return <VaultUI />;
+
+  return (
+    <>
+      <h1>Vault Daap</h1>
+    </>
+  )
 }
 
 export default App;
