@@ -5,7 +5,7 @@ interface Props {
   depositTimestamp: number;
   lockPeriod: number;
   deposit: (amount: string) => void;
-  withdraw: () => void;
+  withdraw: (amount: string) => void;
 }
 
 export default function TransactionUI({
@@ -52,13 +52,13 @@ export default function TransactionUI({
       <div className="w-full max-w-3xl bg-[#2c2f36] border border-white/10 rounded-3xl p-10">
 
         {/* Vault Balance */}
-        <div className="text-center mb-12">
-          <p className="text-xs uppercase tracking-[0.3em] text-white/40">
-            Vault Balance
-          </p>
-          <h2 className="text-5xl font-semibold mt-4 tracking-tight">
+        <div className="mb-12">
+          <h3 className="uppercase tracking-[0.3em] text-white/40">
+            Wallet Balance
+          </h3>
+          <p className="text-xl font-semibold mt-4 tracking-tight">
             {balance} ETH
-          </h2>
+          </p>
         </div>
 
         {/* Progress Section */}
@@ -115,7 +115,7 @@ export default function TransactionUI({
             </div>
 
             <button
-              onClick={withdraw}
+              onClick={() => withdraw(amount)}
               disabled={!canWithdraw}
               className={`w-full py-3 rounded-lg mt-8 border transition tracking-wide ${
                 canWithdraw

@@ -1,11 +1,11 @@
 import type { Abi } from "viem";
 
 // --- Replace this with your Vault contract address ---
-export const VAULT_CONTRACT_ADDRESS = "0x5fbdb2315678afecb367f032d93f642f64180aa3" as `0x${string}`;
+export const VAULT_CONTRACT_ADDRESS = "0xEB3e8C1CdF59fb3b012a727CEaA538d6B4d3ab7D" as `0x${string}`;
 
 // --- Replace this with your Vault contract ABI ---
 export const VAULT_CONTRACT_ABI: Abi = [
-  {
+    {
       "inputs": [],
       "stateMutability": "nonpayable",
       "type": "constructor"
@@ -279,8 +279,7 @@ export const VAULT_CONTRACT_ABI: Abi = [
       "stateMutability": "nonpayable",
       "type": "function"
     }
-  // Add any other functions/events your vault contract has
-];
+  ];
 
 // --- Combine into a Wagmi/Viem config ---
 export const vaultContractConfig = {

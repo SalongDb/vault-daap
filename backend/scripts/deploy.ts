@@ -1,24 +1,25 @@
-import hre from "hardhat";
+import { network } from "hardhat";
 
 async function main() {
-  const { viem } = await hre.network.connect();
+  console.log("🚀 Deploying Vault contract to Sepolia...");
 
-  // Get deployer wallet
-  const [deployer] = await viem.getWalletClients();
-  console.log("Deploying Vault with account:", deployer.account.address);
+  // Connect to selected network (this is key in Hardhat v3)
+  const connection = await network.connect();
 
-  // Deploy Vault
-  const vault = await viem.deployContract("Vault");
-  console.log("Vault deployed at:", vault.address);
+  const viem = connection.viem;
 
-  // Initial balance check (should be 0)
-  const balance = await viem.getPublicClient().then(client =>
-    client.getBalance({ address: vault.address })
-  );
-  console.log("Initial Vault balance:", balance, "wei");
+  const [walletClient] = await viem.getWalletClients();
+
+  console.log("👤 Deployer address:", walletClient.account.address);
+
+  const vault = await viem.deployContract("Vault", []);
+
+  console.log("✅ Vault deployed successfully!");
+  console.log("📍 Contract address:", vault.address);
 }
 
 main().catch((error) => {
+  console.error("❌ Deployment failed:");
   console.error(error);
-  process.exit(1);
+  process.exitCode = 1;
 });
