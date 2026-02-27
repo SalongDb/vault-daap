@@ -11,13 +11,7 @@ function App() {
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
 
-  //Getting user wallet Balance
-  const { data: balance } = useBalance({
-    address,
-  });
-  const formattedBalance = balance ? formatEther(balance.value) : "0";
-
-  //Getting depoTime
+  //Reading users depoInfo
   type UserDepoInfoTuple = [bigint, bigint];
   const { data } = useReadContract({
     ...vaultContractConfig,
@@ -25,6 +19,12 @@ function App() {
     args: [address],
   })
   const depoTuple = data as UserDepoInfoTuple | undefined;
+
+  //Getting depoAmount
+  const depoAmount = depoTuple?.[0] ?? 0n;
+  const vaultBalance = formatEther(depoAmount);
+
+  //Getting depoTime
   const depoTime = depoTuple?.[1] ?? 0n;
   const depositTimestamp = Number(depoTime);
 
@@ -68,7 +68,7 @@ function App() {
 
         {isConnected ? (
           <TransactionUI
-            balance={formattedBalance}
+            balance={vaultBalance}
             depositTimestamp={depositTimestamp}
             lockPeriod={lockPeriod}
             deposit={depositETH}

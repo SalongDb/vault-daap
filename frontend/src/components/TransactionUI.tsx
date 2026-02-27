@@ -52,13 +52,13 @@ export default function TransactionUI({
       <div className="w-full max-w-3xl bg-[#2c2f36] border border-white/10 rounded-3xl p-10">
 
         {/* Vault Balance */}
-        <div className="mb-12">
-          <h3 className="uppercase tracking-[0.3em] text-white/40">
-            Wallet Balance
-          </h3>
-          <p className="text-xl font-semibold mt-4 tracking-tight">
-            {balance} ETH
+        <div className="text-center mb-12">
+          <p className="text-xs uppercase tracking-[0.3em] text-white/40">
+            Vault Balance
           </p>
+          <h2 className="text-5xl font-semibold mt-4 tracking-tight">
+            {balance} ETH
+          </h2>
         </div>
 
         {/* Progress Section */}
