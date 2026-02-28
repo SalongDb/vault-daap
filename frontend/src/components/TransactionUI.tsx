@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 
+// Props coming from parent (contract data + actions)
 interface Props {
-  balance: string;
-  depositTimestamp: number;
-  lockPeriod: number;
+  balance: string;                 // Current vault balance
+  depositTimestamp: number;        // When user deposited (in seconds)
+  lockPeriod: number;              // Lock duration (in seconds)
   deposit: (amount: string) => void;
   withdraw: (amount: string) => void;
 }
@@ -15,12 +16,14 @@ export default function TransactionUI({
   deposit,
   withdraw,
 }: Props) {
-  const [amount, setAmount] = useState("");
-  const [timeLeft, setTimeLeft] = useState(0);
 
+  const [amount, setAmount] = useState("");   // User input amount
+  const [timeLeft, setTimeLeft] = useState(0); // Remaining lock time
+
+  // Countdown timer
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!depositTimestamp) return;
+      if (!depositTimestamp) return; // No deposit → no timer
 
       const unlockTime = depositTimestamp + lockPeriod;
       const now = Math.floor(Date.now() / 1000);
@@ -29,9 +32,10 @@ export default function TransactionUI({
       setTimeLeft(remaining > 0 ? remaining : 0);
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Cleanup
   }, [depositTimestamp, lockPeriod]);
 
+  // Convert seconds → days, hours, minutes, seconds
   const formatTime = (seconds: number) => {
     const d = Math.floor(seconds / 86400);
     const h = Math.floor((seconds % 86400) / 3600);
@@ -40,11 +44,11 @@ export default function TransactionUI({
     return `${d}d ${h}h ${m}m ${s}s`;
   };
 
+  // Withdraw allowed only after timer ends
   const canWithdraw = timeLeft === 0 && depositTimestamp !== 0;
 
   return (
     <div className="flex justify-center items-center mt-20 px-6 text-white">
-
       <div className="w-full max-w-3xl bg-[#2c2f36] border border-white/10 rounded-3xl p-10">
 
         {/* Vault Balance */}
@@ -57,17 +61,14 @@ export default function TransactionUI({
           </h2>
         </div>
 
-        {/* Progress Section */}
+        {/* Countdown (only if deposited) */}
         {depositTimestamp !== 0 && (
-          <div className="mb-5">
-            <div className="flex items-end gap-5 text-sm text-white/50 mb-3">
-              <span className="text-lg text-white/80">Lock Progress</span>
-              <span>{formatTime(timeLeft)} left</span>
-            </div>
+          <div className="mb-5 flex items-end gap-5 text-sm text-white/50">
+            <span className="text-lg text-white/80">Lock Progress</span>
+            <span>{formatTime(timeLeft)} left</span>
           </div>
         )}
 
-        {/* Deposit + Withdraw Grid */}
         <div className="grid md:grid-cols-2 gap-8">
 
           {/* Deposit */}
@@ -81,7 +82,7 @@ export default function TransactionUI({
               placeholder="Amount"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 mb-5 focus:outline-none focus:border-white/60 transition"
+              className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 mb-5"
             />
 
             <button
@@ -117,7 +118,6 @@ export default function TransactionUI({
           </div>
 
         </div>
-
       </div>
     </div>
   );

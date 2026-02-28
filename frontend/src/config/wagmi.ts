@@ -1,10 +1,11 @@
-import { sepolia } from "viem/chains";
-import { createConfig, http, injected } from "wagmi";
+import { sepolia } from "viem/chains"; // Sepolia testnet
+import { createConfig, http, injected } from "wagmi"; 
 
+// Wagmi config for wallet + network
 export const config = createConfig({
-    chains: [sepolia],
-    connectors: [injected()],
+    chains: [sepolia],        // Use Sepolia network
+    connectors: [injected()], // MetaMask / injected wallets
     transports: {
-        [sepolia.id]: http(),
+        [sepolia.id]: http(), // RPC connection
     },
 });
