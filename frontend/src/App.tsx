@@ -1,5 +1,5 @@
 import "./App.css";
-import { useAccount, useBalance, useConnect, useDisconnect, useReadContract, useWriteContract } from "wagmi";
+import { useAccount,useConnect, useDisconnect, useReadContract, useWriteContract } from "wagmi";
 import Navbar from "./components/Navbar";
 import WelcomeCard from "./components/WelcomeCard";
 import TransactionUI from "./components/TransactionUI";

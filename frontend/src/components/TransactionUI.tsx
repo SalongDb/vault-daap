@@ -32,16 +32,12 @@ export default function TransactionUI({
     return () => clearInterval(interval);
   }, [depositTimestamp, lockPeriod]);
 
-  const progress =
-    depositTimestamp !== 0
-      ? ((lockPeriod - timeLeft) / lockPeriod) * 100
-      : 0;
-
   const formatTime = (seconds: number) => {
     const d = Math.floor(seconds / 86400);
     const h = Math.floor((seconds % 86400) / 3600);
     const m = Math.floor((seconds % 3600) / 60);
-    return `${d}d ${h}h ${m}m`;
+    const s = Math.floor(seconds % 60);
+    return `${d}d ${h}h ${m}m ${s}s`;
   };
 
   const canWithdraw = timeLeft === 0 && depositTimestamp !== 0;
@@ -63,17 +59,10 @@ export default function TransactionUI({
 
         {/* Progress Section */}
         {depositTimestamp !== 0 && (
-          <div className="mb-12">
-            <div className="flex justify-between text-sm text-white/50 mb-3">
-              <span>Lock Progress</span>
+          <div className="mb-5">
+            <div className="flex items-end gap-5 text-sm text-white/50 mb-3">
+              <span className="text-lg text-white/80">Lock Progress</span>
               <span>{formatTime(timeLeft)} left</span>
-            </div>
-
-            <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-white/70 transition-all duration-1000"
-                style={{ width: `${progress}%` }}
-              />
             </div>
           </div>
         )}
